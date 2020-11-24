@@ -1,37 +1,37 @@
 parts = {
     0: {
         "Info": {
-            "Mesh": f";MESH:{"mesh"}"
-        },
-        "Layers": {
-            0: [
-                {
-                    "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
-					"Points": [(x1,y1) (x2,y2)]
-					"Extrusion length": (E),
-					"Speed": (F)
-                },
-                {
-                    "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
-					"Points": [(x1,y1) (x2,y2)]
-					"Extrusion length": (E),
-					"Speed": (F),
-                }
-            ],                   
-            1: [
-                {
-                    "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
-					"Points": [(x1,y1) (x2,y2)]
-					"Extrusion length": (E),
-					"Speed": (F)
-                },
-                {
-                    "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
-					"Points": [(x1,y1) (x2,y2)]
-					"Extrusion length": (E),
-					"Speed": (F),
-                }
-            ]
+            "Mesh": ';MESH:{"mesh"}',
+            "Layers": {
+                0: [
+                    {
+                        "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
+                        "Points": [("x1","y1"), ("x2","y2")],
+                        "Extrusion length": ("E"),
+                        "Speed": ("F")
+                    },
+                    {
+                        "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
+                        "Points": [("x1","y1"), ("x2","y2")],
+                        "Extrusion length": ("E"),
+                        "Speed": ("F"),
+                    }
+                ],                   
+                1: [
+                    {
+                        "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
+                        "Points": [("x1","y1"), ("x2","y2")],
+                        "Extrusion length": ("E"),
+                        "Speed": ("F")
+                    },
+                    {
+                        "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
+                        "Points": [("x1","y1"), ("x2","y2")],
+                        "Extrusion length": ("E"),
+                        "Speed": ("F"),
+                    }
+                ]
+            }
         }
     }
 }
