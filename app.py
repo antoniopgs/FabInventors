@@ -6,7 +6,7 @@ start = False
 current_layer = 0
 
 
-with open("1_peca_suporte.gcode") as file:
+with open("gcode_samples/1_peca_suporte.gcode") as file:
     data = [movement.strip("\n") for movement in file.readlines()]
 
 previous_x, previous_y, previous_speed = 0, 0, 0
@@ -26,10 +26,10 @@ for i in range(len(data)):
             current_layer = int(re.match("^;LAYER:(\d*)", data[i]).group(1))
             continue
 
-        if ";TYPE:" in data[i]:
+        elif ";TYPE:" in data[i]:
             current_type = re.match("^;TYPE:(.*)", data[i]).group(1)
 
-        if re.match("^G[01] (F\d+\.?\d*)? (X\d+\.?\d*)? (Y\d+\.?\d*)? (E-?\d+\.?\d*)?", data[i]):
+        elif re.match("^G[01] (F\d+\.?\d*)? (X\d+\.?\d*)? (Y\d+\.?\d*)? (E-?\d+\.?\d*)?", data[i]):
             info = re.match("^G[01] (F\d+\.?\d*)? (X\d+\.?\d*)? (Y\d+\.?\d*)? (E-?\d+\.?\d*)?", data[i])
             try:
                 extrusion = float(info.group(4).strip("E"))
