@@ -1,3 +1,0 @@
-1. use python to turn gcode to json
-2. isolate movement instructions
-3. turn json into paths.
