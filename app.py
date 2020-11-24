@@ -13,38 +13,38 @@ previous_x, previous_y, previous_speed = 0, 0, 0
 current_type = "TRAVEL"
 for i in range(len(data)):
 
-    if ";LAYER_COUNT:" in data[i]:
-        layer_count = int(re.match("^;LAYER_COUNT:(\d*)", data[i]).group(1))
-        layers = {}
-        for n in range(layer_count):
-            layers[n] = []
-        start = True
+    if not start:
+        if ";LAYER_COUNT:" in data[i]:
+            layer_count = int(re.match(";LAYER_COUNT:(\d*)", data[i]).group(1))
+            layers = {}
+            for n in range(layer_count):
+                layers[n] = []
+            start = True
         
-    if start:
-
-        if re.match("^;LAYER:\d*", data[i]):
-            current_layer = int(re.match("^;LAYER:(\d*)", data[i]).group(1))
+    else:
+        if re.match(";LAYER:\d*", data[i]):
+            current_layer = int(re.match(";LAYER:(\d*)", data[i]).group(1))
             continue
 
         elif ";TYPE:" in data[i]:
-            current_type = re.match("^;TYPE:(.*)", data[i]).group(1)
+            current_type = re.match(";TYPE:(.*)", data[i]).group(1)
 
-        elif re.match("^G[01] (F\d+\.?\d*)? (X\d+\.?\d*)? (Y\d+\.?\d*)? (E-?\d+\.?\d*)?", data[i]):
-            info = re.match("^G[01] (F\d+\.?\d*)? (X\d+\.?\d*)? (Y\d+\.?\d*)? (E-?\d+\.?\d*)?", data[i])
+        elif re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( E-?\d+\.?\d*)?", data[i]):
+            info = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( E-?\d+\.?\d*)?", data[i])
             try:
-                extrusion = float(info.group(4).strip("E"))
+                extrusion = float(info.group(4).strip().strip("E"))
             except AttributeError:
                 extrusion = float(0)
             try:
-                speed = float(info.group(1).strip("F"))
+                speed = float(info.group(1).strip().strip("F"))
             except AttributeError:
                 speed = previous_speed
             try:
-                current_x = float(info.group(2).strip("X"))
+                current_x = float(info.group(2).strip().strip("X"))
             except AttributeError:
                 current_x = previous_x
             try:
-                current_y = float(info.group(3).strip("Y"))
+                current_y = float(info.group(3).strip().strip("Y"))
             except AttributeError:
                 current_y = previous_y
                 
