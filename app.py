@@ -2,7 +2,9 @@ import re, json
 
 parts = {}
 start = False
-layer, previous_x, previous_y, previous_speed = 0, 0, 0, 0
+layer = 0
+previous_speed = 0
+previous_x, previous_y = 0, 0 # First Line of First Layer of First Piece starts at x = 0, y = 0 (home)
 current_type = "TRAVEL"
 
 def get(a): # Get values from regex match
@@ -52,7 +54,7 @@ for i in range(len(data)):
         elif re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( E-?\d+\.?\d*)?", data[i]):
             info = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( E-?\d+\.?\d*)?", data[i])
             speed, x, y, extrusion = get("speed"), get("x"), get("y"), get("extrusion")
-            line = {"Current Line": i+1,
+            line = {"G-Code Line": i+1,
                     "Line type": current_type,
                     "Points": [(previous_x, previous_y), (x, y)],
                     "Extrusion Length": extrusion,
