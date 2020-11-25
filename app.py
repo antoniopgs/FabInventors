@@ -31,15 +31,17 @@ def get(a): # Get values from regex match.
 def travel(): # If line ends in a G0 Point, Line Type = TRAVEL.
     if "G0 " in data[i]:
         return "TRAVEL"
+    
     else:
         return current_type
             
 
-with open("gcode_samples/1_peca_suporte.gcode") as file:
+with open("gcode_samples/2_pecas_suporte.gcode") as file:
     data = [movement.strip("\n") for movement in file.readlines()]
     for x in data:
         if ";MESH:" in x:
             mesh = "NONMESH" # If any mesh in file, everything before mesh is NONMESH.
+            break
 
 for i in range(len(data)):
 
@@ -56,9 +58,12 @@ for i in range(len(data)):
         if "G0 " in data[i] or "G1 " in data[i]:
             info = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( Z-?\d+\.?\d*)?( E-?\d+\.?\d*)?", data[i])
             speed, x, y, extrusion = get("speed"), get("x"), get("y"), get("extrusion")
-            if extrusion == float(0): # Only worth it to check for z when there is no extrusion
-                if info.group(4):
-                    layers[layer + 1]["z"] = float(info.group(4).strip().strip("Z")) # Z is attributed to the upcoming layer (layer + 1).
+            if extrusion == float(0): # Only worth it to check for z when there is no extrusion.
+                if info.group(4): # If z has a value, which means z is not None.
+                    if not layers[0]["z"]: # Layer 0 has 2 z values. First one is for layer 0.
+                        layers[0]["z"] = float(info.group(4).strip().strip("Z")) # 
+                    else: # Layer 0's second z value, and all further z values are for the next layer.
+                        layers[layer + 1]["z"] = float(info.group(4).strip().strip("Z")) # Z is attributed to the upcoming layer (layer + 1).
             line = {"G-Code Line Number": i+1,
                     "G-Code Line": data[i],
                     "Part Name": mesh,
