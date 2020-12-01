@@ -1,6 +1,5 @@
 import re, json
 
-start = False
 mesh = "NONMESH"
 layers = {}
 
@@ -45,46 +44,40 @@ def check_travel(): # If line ends in a G0 Point, Line Type = TRAVEL.
     elif "G1 " in movement:
         return line_type
 
+
 for i, movement in enumerate(line.strip("\n") for line in open("gcode_samples/2_pecas_suporte.gcode")):
-    
-    try:
+
+    if ";LAYER:" in movement:
         layer = int(re.match(";LAYER:(\d*)", movement).group(1))
-        layers[layer] = {"z": None,
-                        "lines": []}
-        start = True
-    except AttributeError:
-        pass
-        
-    if start:
+        layers[layer] = {"z": None, "lines": []}
+
+    elif 0 in layers: # If first layer was already found.
         if "G0 " in movement or "G1 " in movement:
             info = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( Z-?\d+\.?\d*)?( E-?\d+\.?\d*)?", movement)
+            layers[layer]["lines"].append({
+                "G-Code Line Number": i + 1, # i is only incremented after the first two lines.
+                "G-Code Line": movement,
+                "Part Name": mesh,
+                "Line Type": check_travel(),
+                "Points": [
+                    (get_previous(2), get_previous(3)),
+                    (get(2), get(3))
+                ],
+                "Extrusion Length": get(5),
+                "Speed": get(1)
+            })
 
-            if not get(5): # Only worth it to check for z when there is no extrusion.
-                if info.group(4): # If z has a value, which means z is not None.
-                    if not layers[0]["z"]: # Layer 0 has 2 z values. First one is for layer 0.
-                        layers[0]["z"] = get(4)
-                    else: # Layer 0's second z value, and all further z values are for the next layer.
-                        layers[layer + 1] = {"z": get(4), "lines": []} # Z is attributed to the upcoming layer (layer + 1).
-
-            line = {"G-Code Line Number": i + 1, # i is only incremented after the first two lines
-                    "G-Code Line": movement,
-                    "Part Name": mesh,
-                    "Line Type": check_travel(),
-                    "Points": [
-                        (get_previous(2), get_previous(3)),
-                        (get(2), get(3))
-                    ],
-                    "Extrusion Length": get(5),
-                    "Speed": get(1)
-                    }
-            layers[layer]["lines"].append(line)
+            if info.group(4): # If Z exists.
+                if not layers[0]["z"]: # Layer 0 has 2 z values. First one is for layer 0.
+                    layers[0]["z"] = get(4)
+                else: # Layer 0's second z value, and all further z values are for the next layer (layer + 1).
+                    layers[layer + 1] = {"z": get(4)}
 
         elif ";TYPE:" in movement:
             line_type = re.match(";TYPE:(.*)", movement).group(1)
 
         elif ";MESH:" in movement:
             mesh = re.match(";MESH:(.*)", movement).group(1)
-            
 
 output = json.dumps(layers, indent=4)
 print(output)
