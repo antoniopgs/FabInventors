@@ -3,7 +3,7 @@ layers = {
         "lines": [
             {"G-Code Line Number": "i+1",
             "G-Code Line": "data[i]",
-            "Part Name": "SUPPORT/MESH_NAME/NONMESH",
+            "Part Name": "MESH_NAME/NONMESH",
             "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
             "Points": [("x1","y1"), ("x2","y2")],
             "Extrusion length": ("E"),
@@ -11,7 +11,7 @@ layers = {
             },
             {"G-Code Line Number": "i+1",
             "G-Code Line": "data[i]",
-            "Part Name": "SUPPORT/MESH_NAME/NONMESH",
+            "Part Name": "MESH_NAME/NONMESH",
             "Line type": "TRAVEL(se o ponto de destino == G0) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT",
             "Points": [("x1","y1"), ("x2","y2")],
             "Extrusion length": ("E"),
