@@ -38,7 +38,7 @@ for x in [movement.strip("\n") for movement in open("gcode_samples/2_pecas_supor
         mesh = "NONMESH" # If any mesh in file, everything before mesh is NONMESH.
         break
 
-for pair in gen_line_pairs("gcode_samples/2_pecas_suporte.gcode"):
+for i, pair in enumerate(gen_line_pairs("gcode_samples/2_pecas_suporte.gcode")):
 
     if not start:
         try:
@@ -61,7 +61,7 @@ for pair in gen_line_pairs("gcode_samples/2_pecas_suporte.gcode"):
                         layers[0]["z"] = get(4)
                     else: # Layer 0's second z value, and all further z values are for the next layer.
                         layers[layer + 1]["z"] = get(4) # Z is attributed to the upcoming layer (layer + 1).
-            line = {"G-Code Line Number": "???",
+            line = {"G-Code Line Number": i + 2, # i is only incremented after the first two lines
                     "G-Code Line": pair[1],
                     "Part Name": mesh,
                     "Line Type": check_travel(),
