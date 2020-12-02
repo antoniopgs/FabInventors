@@ -1,7 +1,8 @@
 import re, json
 
-mesh = "NONMESH"
+start = False
 layers = {}
+mesh = "NONMESH"
 
 def get(group_number):
     try:
@@ -47,13 +48,16 @@ def check_travel(): # If line ends in a G0 Point, Line Type = TRAVEL.
 
 for i, movement in enumerate(line.strip("\n") for line in open("gcode_samples/2_pecas_suporte.gcode")):
 
-    if ";LAYER:" in movement:
-        layer = int(re.match(";LAYER:(\d*)", movement).group(1))
-        layers[layer] = {"z": None, "lines": []}
-
-    elif 0 in layers: # If first layer was already found.
+    if start:
         if "G0 " in movement or "G1 " in movement:
+            
             info = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( Z-?\d+\.?\d*)?( E-?\d+\.?\d*)?", movement)
+            if info.group(4): # If Z exists.
+                if 0 not in layers:
+                    layers[layer] = {"z": get(4), "lines": []}
+                else:
+                    layers[layer + 1] = {"z": get(4), "lines": []}
+
             layers[layer]["lines"].append({
                 "G-Code Line Number": i + 1, # i is only incremented after the first two lines.
                 "G-Code Line": movement,
@@ -67,17 +71,17 @@ for i, movement in enumerate(line.strip("\n") for line in open("gcode_samples/2_
                 "Speed": get(1)
             })
 
-            if info.group(4): # If Z exists.
-                if not layers[0]["z"]: # Layer 0 has 2 z values. First one is for layer 0.
-                    layers[0]["z"] = get(4)
-                else: # Layer 0's second z value, and all further z values are for the next layer (layer + 1).
-                    layers[layer + 1] = {"z": get(4)}
-
         elif ";TYPE:" in movement:
             line_type = re.match(";TYPE:(.*)", movement).group(1)
 
         elif ";MESH:" in movement:
             mesh = re.match(";MESH:(.*)", movement).group(1)
+
+        elif ";LAYER:" in movement:
+            layer = int(re.match(";LAYER:(.*)", movement).group(1))
+    
+    elif ";LAYER_COUNT:" in movement:
+        start = True
 
 output = json.dumps(layers, indent=4)
 print(output)
