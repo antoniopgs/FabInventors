@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import axes3d as mpl
 from fab_parser import parse
 import os, json
 
@@ -16,12 +15,14 @@ for file_name in file_names:
                 x.append(point[0])
                 y.append(point[1])
                 z.append(value["z"])
-                      
-    mpl.rcParams["legend.fontsize"] = 10
+                 
     fig = plt.figure()
     ax = fig.gca(projection="3d")
-    ax.plot(x, y, z, label=file_name)
-    ax.legend()
+    ax.set_title(file_name)
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    ax.plot(x, y, z)
     plt.show()
 
 
