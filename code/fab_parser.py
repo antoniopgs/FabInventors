@@ -1,6 +1,6 @@
-import re, json
+import json, re, os
 
-layers = {}
+data = {}
 
 def get(layer_value, data, group_number):
     try:
@@ -14,25 +14,25 @@ def get(layer_value, data, group_number):
 def get_previous(layer_value, group_number): # Get values from regex match.
     if group_number == 1:
         try:
-            return layers[layer_value]["lines"][-1]["Speed"]
+            return data["layers"][layer_value]["lines"][-1]["Speed"]
         except IndexError:
-            return layers[layer_value - 1]["lines"][-1]["Speed"]
+            return data["layers"][layer_value - 1]["lines"][-1]["Speed"]
     elif group_number == 2:
         try:
-            return layers[layer_value]["lines"][-1]["Points"][1][0]
+            return data["layers"][layer_value]["lines"][-1]["Points"][1][0]
         except IndexError:
             if layer_value == 0:
                 return float(0)
             else:
-                return layers[layer_value - 1]["lines"][-1]["Points"][1][0]
+                return data["layers"][layer_value - 1]["lines"][-1]["Points"][1][0]
     elif group_number == 3:
         try:
-            return layers[layer_value]["lines"][-1]["Points"][1][1]
+            return data["layers"][layer_value]["lines"][-1]["Points"][1][1]
         except IndexError:
             if layer_value == 0:
                 return float(0)
             else:
-                return layers[layer_value - 1]["lines"][-1]["Points"][1][1]
+                return data["layers"][layer_value - 1]["lines"][-1]["Points"][1][1]
     elif group_number == 5:
         return float(0) # If nothing is extruded.
 
@@ -43,6 +43,7 @@ def check_travel(line, return_value): # If line ends in a G0 Point, Line Type = 
         return return_value
 
 def parse(file):
+    data["input"] = os.path.basename(file)
     start = False
     mesh = "NONMESH"
     line_type = None
@@ -55,12 +56,12 @@ def parse(file):
                 info = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( Z-?\d+\.?\d*)?( E-?\d+\.?\d*)?", movement)
                 
                 if info.group(4): # If Z exists.
-                    if 0 not in layers:
-                        layers[layer] = {"z": get(layer, info, 4), "lines": []}
+                    if "layers" not in data:
+                        data["layers"] = {0: {"z": get(layer, info, 4), "lines": []}}
                     else:
-                        layers[layer + 1] = {"z": get(layer, info, 4), "lines": []}
+                        data["layers"][layer + 1] = {"z": get(layer, info, 4), "lines": []}
 
-                layers[layer]["lines"].append({
+                data["layers"][layer]["lines"].append({
                     "G-Code Line Number": i + 1, # i is only incremented after the first two lines.
                     "G-Code Line": movement,
                     "Part Name": mesh,
@@ -86,4 +87,4 @@ def parse(file):
         elif ";LAYER_COUNT:" in movement:
             start = True
 
-    return json.dumps(layers, indent=4)
+    return json.dumps(data, indent=4)
