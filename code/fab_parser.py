@@ -39,7 +39,6 @@ def get_previous(layer_value, group_number): # Get values from regex match.
 def check_travel(line, return_value): # If line ends in a G0 Point, Line Type = TRAVEL.
     if "G0 " in line:
         return "TRAVEL"
-    
     elif "G1 " in line:
         return return_value
 
