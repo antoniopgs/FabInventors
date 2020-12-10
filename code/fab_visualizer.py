@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
-import json
 
 def visualize(data):
-    data = json.loads(data)
     x, y, z = [], [], []
     for layer in data["layers"].values():
         for line in layer["lines"]:

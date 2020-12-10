@@ -1,8 +1,8 @@
-import datetime, json, math
+import datetime, math
 
 def estimate(data):
     time = 0
-    for layer in (x for x in json.loads(data)["layers"].values()):
+    for layer in (x for x in data["layers"].values()):
         for line in layer["lines"]:
             x1 = line["Points"][0][0] # Milimeters
             y1 = line["Points"][0][1] # Milimeters

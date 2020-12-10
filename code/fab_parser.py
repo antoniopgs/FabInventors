@@ -1,4 +1,4 @@
-import json, re, os
+import re, os
 
 data = {}
 
@@ -87,4 +87,4 @@ def parse(file):
         elif ";LAYER_COUNT:" in movement:
             start = True
 
-    return json.dumps(data, indent=4)
+    return data
