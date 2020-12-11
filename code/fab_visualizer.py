@@ -28,6 +28,8 @@ def visualize(data):
 
     for i in range(len(x)):
         ax.plot(x[i:i+2], y[i:i+2], z[i:i+2], color=c[i])
+
+    ax.legend(colors.keys(), labelcolor=colors.values())
     
     ax.set_xlabel('x')
     ax.set_ylabel('y')
