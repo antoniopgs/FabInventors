@@ -16,10 +16,7 @@ def visualize(data):
     ax = fig.gca(projection="3d")
 
     for layer in data["layers"].values():
-        try:
-            prev_z, z = z, layer["z"]
-        except UnboundLocalError:
-            z = layer["z"]
+        z = layer["z"]
 
         for i, line in enumerate(layer["lines"]):
             try:
