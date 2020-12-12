@@ -35,11 +35,11 @@ def visualize_dict(data):
 
             previous_line_type = line["Line Type"]
 
-    ax.legend(colors.keys(), labelcolor=colors.values())
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
-    
+
+    ax.legend(colors.keys(), labelcolor=colors.values())
     ax.set_title(data["input"].replace(".gcode", " (JSON)"))
     
     return plt
