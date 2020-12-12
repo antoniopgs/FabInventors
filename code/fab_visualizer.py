@@ -2,13 +2,13 @@ import matplotlib.pyplot as plt
 
 # COLOR NAMES: https://matplotlib.org/3.1.0/gallery/color/named_colors.html
 colors = {
-    "SUPPORT": "b", #blue
-    "TRAVEL": "k", #black
-    "SKIRT": "g", #green
-    "WALL-OUTER": "r", #red
-    "WALL-INNER": "c", #cyan
-    "SKIN": "m", #magenta
-    "FILL": "y", #yellow
+    "SUPPORT": "blue",
+    "TRAVEL": "black",
+    "SKIRT": "green",
+    "WALL-OUTER": "red",
+    "WALL-INNER": "cyan",
+    "SKIN": "magenta",
+    "FILL": "yellow",
 }
 
 def visualize(data):
