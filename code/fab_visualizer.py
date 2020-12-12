@@ -1,42 +1,74 @@
 import matplotlib.pyplot as plt
+import re, os
 
 # COLOR NAMES: https://matplotlib.org/3.1.0/gallery/color/named_colors.html
 colors = {
+    "SETUP": "orange",
     "SUPPORT": "blue",
-    "TRAVEL": "black",
+    "TRAVEL": "grey",
     "SKIRT": "green",
     "WALL-OUTER": "red",
     "WALL-INNER": "cyan",
     "SKIN": "magenta",
-    "FILL": "yellow",
+    "FILL": "black"
 }
 
-def visualize(data):
+def visualize(file):
     fig = plt.figure()
     ax = fig.gca(projection="3d")
 
-    for layer in data["layers"].values():
-        z = layer["z"]
+    for line in (x.strip("\n") for x in open(file)):
+        if "G0 " in line or "G1 " in line:
+            data = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( Z-?\d+\.?\d*)?( E-?\d+\.?\d*)?", line)
 
-        for i, line in enumerate(layer["lines"]):
             try:
-                prev_x, x = x, line["Points"][0][0]
-                prev_y, y = y, line["Points"][0][1]
+                x = float(data.group(2).replace("X", ""))
+            except AttributeError:
+                x = prev_x
 
-                if i == 1:
-                    prev_z = z
-                    
-                ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[previous_line_type])
+            try:
+                y = float(data.group(3).replace("Y", ""))
+            except AttributeError:
+                y = prev_y
 
-            except UnboundLocalError:
-                x = line["Points"][0][0]
-                y = line["Points"][0][1]
+            try:
+                z = float(data.group(4).replace("Z", ""))
+            except AttributeError:
+                z = prev_z
+            
+            if "G0 " in line:
+                ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors["TRAVEL"])
+            elif "G1 " in line:
+                ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[c])
 
-            previous_line_type = line["Line Type"]
+            '''
+            print(f"LINE: {line}")
+            print(f"X: {prev_x} --> {x}")
+            print(f"Y: {prev_y} --> {y}")
+            print(f"Z: {prev_z} --> {z}")
+            if "G0 " in line:
+                print(f"C: TRAVEL")
+            elif "G1 " in line:
+                print(f"C: {c}")
+            print()
+            '''
+
+            prev_x, prev_y, prev_z= x, y, z
+        
+        elif ";TYPE:" in line:
+            c = re.match(";TYPE:(.*)", line).group(1)
+        
+        elif line == "G28 ;Home":
+            prev_x, prev_y, prev_z, c = 0, 0, 0, "SETUP"
 
     ax.legend(colors.keys(), labelcolor=colors.values())
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
-    ax.set_title(data["input"])
+
+    ax.set_xscale("linear")
+    ax.set_yscale("linear")
+    ax.set_zscale("linear")
+
+    ax.set_title(os.path.basename(file))
     plt.show()
