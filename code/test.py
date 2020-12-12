@@ -1,7 +1,7 @@
 from fab_visualizer import visualize
 from fab_estimator import estimate
 from fab_parser import parse
-import os
+import os, json
 
 samples_folder = os.getcwd().strip("code") + "gcode_samples"
 

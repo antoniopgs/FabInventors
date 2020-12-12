@@ -16,19 +16,26 @@ def visualize(data):
     ax = fig.gca(projection="3d")
 
     for layer in data["layers"].values():
-        for line in layer["lines"]:
-            for i, point in enumerate(line["Points"]):
-                if i > 0:
-                    prev_x, x = x, point[0]
-                    prev_y, y = y, point[1]
-                    prev_z, z = z, layer["z"]
+        try:
+            prev_z, z = z, layer["z"]
+        except UnboundLocalError:
+            z = layer["z"]
 
-                    ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[line["Line Type"]])
+        for i, line in enumerate(layer["lines"]):
+            try:
+                prev_x, x = x, line["Points"][0][0]
+                prev_y, y = y, line["Points"][0][1]
 
-                elif i == 0:
-                    x = point[0]
-                    y = point[1]
-                    z = layer["z"]
+                if i == 1:
+                    prev_z = z
+                    
+                ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[previous_line_type])
+
+            except UnboundLocalError:
+                x = line["Points"][0][0]
+                y = line["Points"][0][1]
+
+            previous_line_type = line["Line Type"]
 
     ax.legend(colors.keys(), labelcolor=colors.values())
     ax.set_xlabel('x')
