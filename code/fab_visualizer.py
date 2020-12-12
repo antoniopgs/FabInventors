@@ -12,28 +12,27 @@ colors = {
 }
 
 def visualize(data):
-    x, y, z = [], [], []
-    c = ""
-    
-    for layer in data["layers"].values():
-        for line in layer["lines"]:
-            for point in line["Points"]:
-                x.append(point[0])
-                y.append(point[1])
-                z.append(layer["z"])
-                c += colors[line["Line Type"]]
-
     fig = plt.figure()
     ax = fig.gca(projection="3d")
 
-    for i in range(len(x)):
-        ax.plot(x[i:i+2], y[i:i+2], z[i:i+2], color=c[i])
+    for layer in data["layers"].values():
+        for line in layer["lines"]:
+            for i, point in enumerate(line["Points"]):
+                if i > 0:
+                    prev_x, x = x, point[0]
+                    prev_y, y = y, point[1]
+                    prev_z, z = z, layer["z"]
+
+                    ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[line["Line Type"]])
+
+                elif i == 0:
+                    x = point[0]
+                    y = point[1]
+                    z = layer["z"]
 
     ax.legend(colors.keys(), labelcolor=colors.values())
-    
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
     ax.set_title(data["input"])
     plt.show()
-
