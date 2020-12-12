@@ -7,7 +7,8 @@ import os, json
 samples_folder = os.getcwd().strip("code") + "gcode_samples"
 
 for sample in os.listdir(samples_folder):
-    data = parse(f"{samples_folder}/{sample}")
     #print(f"Sample: {sample}\nPrint Time: {estimate(data)}\n")
-    visualize_dict(data)
-    #visualize(f"{samples_folder}/{sample}")
+    p1 = visualize_dict(parse(f"{samples_folder}/{sample}"))
+    p2 = visualize(f"{samples_folder}/{sample}")
+    p1.show()
+    p2.show()

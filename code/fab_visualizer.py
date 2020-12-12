@@ -5,12 +5,12 @@ import re, os
 colors = {
     "SETUP": "orange",
     "SUPPORT": "blue",
-    "TRAVEL": "grey",
+    "TRAVEL": "black",
     "SKIRT": "green",
     "WALL-OUTER": "red",
     "WALL-INNER": "cyan",
     "SKIN": "magenta",
-    "FILL": "black"
+    "FILL": "gold"
 }
 
 def visualize(file):
@@ -35,30 +35,20 @@ def visualize(file):
                 z = float(data.group(4).replace("Z", ""))
             except AttributeError:
                 z = prev_z
-            
-            if "G0 " in line:
+
+            if c == "SETUP":
+                ax.plot([prev_x, x], [prev_y, y], [0.3, 0.3], color=colors["TRAVEL"])
+            elif "G0 " in line:
                 ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors["TRAVEL"])
             elif "G1 " in line:
                 ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[c])
-
-            '''
-            print(f"LINE: {line}")
-            print(f"X: {prev_x} --> {x}")
-            print(f"Y: {prev_y} --> {y}")
-            print(f"Z: {prev_z} --> {z}")
-            if "G0 " in line:
-                print(f"C: TRAVEL")
-            elif "G1 " in line:
-                print(f"C: {c}")
-            print()
-            '''
 
             prev_x, prev_y, prev_z= x, y, z
         
         elif ";TYPE:" in line:
             c = re.match(";TYPE:(.*)", line).group(1)
         
-        elif line == "G28 ;Home":
+        if line == "G28 ;Home":
             prev_x, prev_y, prev_z, c = 0, 0, 0, "SETUP"
 
     ax.legend(colors.keys(), labelcolor=colors.values())
@@ -66,9 +56,6 @@ def visualize(file):
     ax.set_ylabel('y')
     ax.set_zlabel('z')
 
-    ax.set_xscale("linear")
-    ax.set_yscale("linear")
-    ax.set_zscale("linear")
-
-    ax.set_title(os.path.basename(file))
-    plt.show()
+    ax.set_title(os.path.basename(file).replace(".gcode", " (G-Code)"))
+    
+    return plt
