@@ -60,5 +60,5 @@ def visualize(file):
     
     ax.legend(colors.keys(), labelcolor=colors.values())
     ax.set_title(os.path.basename(file).replace(".gcode", " (G-Code)"))
-    
+
     return plt
