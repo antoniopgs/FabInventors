@@ -6,13 +6,12 @@ import os, json
 
 samples_folder = os.getcwd().strip("code") + "gcode_samples"
 
-for sample in os.listdir(samples_folder):
-    data = parse(f"{samples_folder}/{sample}")
-    #print(json.dumps(data, indent=4))
-    #break
-    #estimation = estimate(data)
-    #print(f"Sample: {sample}\nPrint Time: {estimation}\n")
-    p1 = visualize_dict(data)
-    p2 = visualize(f"{samples_folder}/{sample}")
-    p1.show()
-    p2.show()
+file = os.listdir(samples_folder)[2]
+#print(json.dumps(data, indent=4))
+#break
+#estimation = estimate(data)
+#print(f"Sample: {sample}\nPrint Time: {estimation}\n")
+p1 = visualize_dict(parse(f"{samples_folder}/{file}"))
+p2 = visualize(f"{samples_folder}/{file}")
+p1.show()
+p2.show()
