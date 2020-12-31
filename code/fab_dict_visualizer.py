@@ -16,24 +16,21 @@ def visualize_dict(data):
     fig = plt.figure()
     ax = fig.gca(projection="3d")
 
-    for layer in data["layers"].values():
+    x, y = 0, 0
+    for i, layer in enumerate(data["layers"].values()):
         z = layer["z"]
 
-        for i, line in enumerate(layer["lines"]):
-            try:
-                prev_x, x = x, line["Points"][0][0]
-                prev_y, y = y, line["Points"][0][1]
+        if i == 0:
+            prev_z = z
 
-                if i == 1:
-                    prev_z = z
+        for n, line in enumerate(layer["lines"]):
+            prev_x, x = x, line["Points"][1][0]
+            prev_y, y = y, line["Points"][1][1]
+
+            if n == 1:
+                prev_z = z
                     
-                ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[previous_line_type])
-
-            except UnboundLocalError:
-                x = line["Points"][0][0]
-                y = line["Points"][0][1]
-
-            previous_line_type = line["Line Type"]
+            ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[line["Line Type"]])
 
     ax.set_xlabel('x')
     ax.set_ylabel('y')
