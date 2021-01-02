@@ -35,7 +35,7 @@ def detect_boundaries(json):
 
     return (min_x, max_x), (min_y, max_y)
 
-def set_splitter(json):
+def slice_json(json):
     detections = detect_boundaries(json)
     
     min_x, max_x = detections[0][0], detections[0][1]
@@ -49,53 +49,42 @@ def set_splitter(json):
     boundary_1 = LineString([(min_x + slice_width, min_y), (min_x + slice_width, max_y)])
     boundary_2 = LineString([(max_x - slice_width, min_y), (max_x - slice_width, max_y)])
 
-    splitter = MultiLineString([boundary_1, boundary_2])
-    return splitter
+    boundaries = MultiLineString([boundary_1, boundary_2])
 
-
-def slice_json(json):
     fig = plt.figure()
     ax = fig.gca(projection="3d")
-    splitter = set_splitter(json)
 
-    for boundary in list(splitter.geoms):
+    for boundary in list(boundaries.geoms):
         boundary_coordinates = list(boundary.coords)
         
-        x1 = boundary_coordinates[0][0]
-        y1 = boundary_coordinates[0][1]
+        bx1 = boundary_coordinates[0][0]
+        by1 = boundary_coordinates[0][1]
         
-        x2 = boundary_coordinates[1][0]
-        y2 = boundary_coordinates[1][1]
+        bx2 = boundary_coordinates[1][0]
+        by2 = boundary_coordinates[1][1]
         
-        ax.plot((x1, x2), (y1, y2), color="gray")
+        ax.plot((bx1, bx2), (by1, by2), color="gray")
 
     for line in json["lines"]:
-        if line["type"] == "TRAVEL":
-            ax.plot(
-                [line["points"][0][0], line["points"][1][0]],
-                [line["points"][0][1], line["points"][1][1]],
-                [line["points"][0][2], line["points"][1][2]],
-                color = colors[line["type"]]
-            )   
-        else:
-            x1, y1 = line["points"][0][0], line["points"][0][1]
-            x2, y2 = line["points"][1][0], line["points"][1][1]
+        lx1, ly1 = line["points"][0][0], line["points"][0][1]
+        lx2, ly2 = line["points"][1][0], line["points"][1][1]
+        
+        line_str = LineString([(lx1,ly1), (lx2,ly2)])
+        result = split(line_str, boundaries)
+
+        for i, subline in enumerate(list(result.geoms)):
+            subline_coordinates = list(subline.coords)
             
-            line_str = LineString([(x1,y1), (x2,y2)])
-            result = split(line_str, splitter)
+            sx1 = subline_coordinates[0][0]
+            sy1 = subline_coordinates[0][1]
+            
+            sx2 = subline_coordinates[1][0]
+            sy2 = subline_coordinates[1][1]
 
-            for i, subline in enumerate(list(result.geoms)):
-                subline_coordinates = list(subline.coords)
-                
-                x1 = subline_coordinates[0][0]
-                y1 = subline_coordinates[0][1]
-                
-                x2 = subline_coordinates[1][0]
-                y2 = subline_coordinates[1][1]
-
+            if sx1 <= (min_x + slice_width) and sx2 <= (min_x + slice_width):
                 ax.plot(
-                    [x1, x2],
-                    [y1, y2],
+                    [sx1, sx2],
+                    [sy1, sy2],
                     [line["points"][0][2], line["points"][1][2]],
                     color = colors[line["type"]]
                 )   
