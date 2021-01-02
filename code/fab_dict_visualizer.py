@@ -23,17 +23,17 @@ def visualize_dict(data):
     for line in data["lines"]:
 
         plot_data.append([
-            (line["Points"][0][0], line["Points"][1][0]),
-            (line["Points"][0][1], line["Points"][1][1]),
-            (line["Points"][0][2], line["Points"][1][2]),
-            colors[line["Line Type"]]
+            (line["points"][0][0], line["points"][1][0]),
+            (line["points"][0][1], line["points"][1][1]),
+            (line["points"][0][2], line["points"][1][2]),
+            colors[line["type"]]
         ])
 
         ax.plot(
-            [line["Points"][0][0], line["Points"][1][0]],
-            [line["Points"][0][1], line["Points"][1][1]],
-            [line["Points"][0][2], line["Points"][1][2]],
-            color=colors[line["Line Type"]]
+            [line["points"][0][0], line["points"][1][0]],
+            [line["points"][0][1], line["points"][1][1]],
+            [line["points"][0][2], line["points"][1][2]],
+            color=colors[line["type"]]
         )
 
     ax.set_xlabel('x')
@@ -41,6 +41,6 @@ def visualize_dict(data):
     ax.set_zlabel('z')
 
     ax.legend(colors.keys(), labelcolor=colors.values())
-    ax.set_title(data["input"])
+    ax.set_title(data["input"].replace(".gcode", " (JSON)"))
     
     return plot_data, fig

@@ -24,16 +24,16 @@ def parse(file):
                 extrusion = float(info.group(5).replace("E", "")) if info.group(5) else None # No apparent "previous extrusion" values. It's always explicit.
 
                 data["lines"].append({
-                    "G-Code Line Number": i + 1, # i is only incremented after the first two lines.
-                    "G-Code Line": movement,
-                    "Part Name": mesh,
-                    "Line Type": "TRAVEL" if "G0 " in movement else line_type,
-                    "Points": [
+                    "line_number": i + 1, # i is only incremented after the first two lines.
+                    "line_content": movement,
+                    "part": mesh,
+                    "type": "TRAVEL" if "G0 " in movement else line_type,
+                    "points": [
                         (prev_x, prev_y, prev_z if prev_z else z),
                         (x, y, z)
                     ],
-                    "Extrusion Length": extrusion,
-                    "Speed": speed
+                    "extrusion": extrusion,
+                    "speed": speed
                 })
 
                 prev_speed = speed

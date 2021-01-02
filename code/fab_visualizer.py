@@ -49,6 +49,6 @@ def visualize(file):
     ax.set_zlabel('z')
     
     ax.legend(colors.keys(), labelcolor=colors.values())
-    ax.set_title(os.path.basename(file))
+    ax.set_title(os.path.basename(file).replace(".gcode", " (G-Code)"))
 
     return plot_data, fig
