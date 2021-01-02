@@ -3,7 +3,7 @@ from fab_estimator import estimate
 from fab_parser import parse
 
 samples_folder = "./../gcode_samples/"
-g_code = samples_folder + "2_pecas_suporte.gcode"
+g_code = samples_folder + "1_peca.gcode"
 
 json = parse(g_code)
 plt = visualize(json)
