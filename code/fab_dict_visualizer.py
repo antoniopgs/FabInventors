@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from timer import timer
 
 # COLOR NAMES: https://matplotlib.org/3.1.0/gallery/color/named_colors.html
 colors = {
@@ -12,31 +13,34 @@ colors = {
     "FILL": "gold"
 }
 
+@timer
 def visualize_dict(data):
     fig = plt.figure()
     ax = fig.gca(projection="3d")
 
-    x, y = 0, 0
-    for i, layer in enumerate(data["layers"].values()):
-        z = layer["z"]
+    plot_data = []
 
-        if i == 0:
-            prev_z = z
+    for line in data["lines"]:
 
-        for n, line in enumerate(layer["lines"]):
-            prev_x, x = x, line["Points"][1][0]
-            prev_y, y = y, line["Points"][1][1]
+        plot_data.append([
+            (line["Points"][0][0], line["Points"][1][0]),
+            (line["Points"][0][1], line["Points"][1][1]),
+            (line["Points"][0][2], line["Points"][1][2]),
+            colors[line["Line Type"]]
+        ])
 
-            if n == 1:
-                prev_z = z
-                    
-            ax.plot([prev_x, x], [prev_y, y], [prev_z, z], color=colors[line["Line Type"]])
+        ax.plot(
+            [line["Points"][0][0], line["Points"][1][0]],
+            [line["Points"][0][1], line["Points"][1][1]],
+            [line["Points"][0][2], line["Points"][1][2]],
+            color=colors[line["Line Type"]]
+        )
 
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
 
     ax.legend(colors.keys(), labelcolor=colors.values())
-    ax.set_title(data["input"].replace(".gcode", " (JSON)"))
+    ax.set_title(data["input"])
     
-    return plt
+    return plot_data, fig
