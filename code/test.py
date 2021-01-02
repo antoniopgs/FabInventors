@@ -1,17 +1,23 @@
-from fab_dict_visualizer import visualize_dict
 from fab_visualizer import visualize
 from fab_estimator import estimate
 from fab_parser import parse
-import os, json
 
-samples_folder = os.getcwd().strip("code") + "gcode_samples"
+samples_folder = "./../gcode_samples/"
+g_code = samples_folder + "2_pecas_suporte.gcode"
 
-file = os.listdir(samples_folder)[2]
-#print(json.dumps(data, indent=4))
-#break
-#estimation = estimate(data)
-#print(f"Sample: {sample}\nPrint Time: {estimation}\n")
-p1 = visualize_dict(parse(f"{samples_folder}/{file}"))
-p2 = visualize(f"{samples_folder}/{file}")
-p1.show()
-p2.show()
+json = parse(g_code)
+plt = visualize(json)
+estimation = estimate(json)
+
+plt.show()
+print(f"- Estimated Print Time: {estimation}")
+
+'''
+parsing_runtime = parse(g_code, True)
+visualization_runtime = visualize(json, True)
+estimation_runtime = estimate(json, True)
+
+print(f"""- Parsing Runtime: {parsing_runtime}s
+- Estimation Runtime: {estimation_runtime}s
+- Visualization Runtime: {visualization_runtime}s""")
+'''

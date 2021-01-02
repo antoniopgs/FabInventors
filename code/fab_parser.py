@@ -1,21 +1,20 @@
+from fab_timer import timer
 import re, os
 
-data = {}
-
+@timer
 def parse(file):
     start = False
-    data["input"] = os.path.basename(file)
-    data["lines"] = []
-    mesh = "NONMESH"
+    data = {"input": os.path.basename(file), "lines": []}
+    prev_x, prev_y, prev_z = float(0), float(0), None # Always start at home (0, 0).
     line_type = None
-    prev_x, prev_y, prev_z = float(0), float(0), None
+    mesh = "NONMESH"
 
-    for i, movement in enumerate(line.strip("\n") for line in open(file)):
+    for line in (x.strip("\n") for x in open(file)):
 
         if start:
             
-            if "G0 " in movement or "G1 " in movement:
-                info = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( Z-?\d+\.?\d*)?( E-?\d+\.?\d*)?", movement)
+            if "G0 " in line or "G1 " in line:
+                info = re.match("G[01]( F\d+\.?\d*)?( X\d+\.?\d*)?( Y\d+\.?\d*)?( Z-?\d+\.?\d*)?( E-?\d+\.?\d*)?", line)
 
                 speed = float(info.group(1).replace("F", "")) if info.group(1) else prev_speed
                 x = float(info.group(2).replace("X", "")) if info.group(2) else prev_x
@@ -24,31 +23,25 @@ def parse(file):
                 extrusion = float(info.group(5).replace("E", "")) if info.group(5) else None # No apparent "previous extrusion" values. It's always explicit.
 
                 data["lines"].append({
-                    "line_number": i + 1, # i is only incremented after the first two lines.
-                    "line_content": movement,
-                    "part": mesh,
-                    "type": "TRAVEL" if "G0 " in movement else line_type,
                     "points": [
                         (prev_x, prev_y, prev_z if prev_z else z),
                         (x, y, z)
                     ],
+                    "speed": speed,
                     "extrusion": extrusion,
-                    "speed": speed
+                    "type": "TRAVEL" if "G0 " in line else line_type,
+                    "mesh": mesh
                 })
 
-                prev_speed = speed
-                prev_x = x
-                prev_y = y
-                prev_z = z
-                prev_extrusion = extrusion
+                prev_speed, prev_x, prev_y, prev_z, prev_extrusion = speed, x, y, z, extrusion
 
-            elif ";TYPE:" in movement:
-                line_type = re.match(";TYPE:(.*)", movement).group(1)
+            elif ";TYPE:" in line:
+                line_type = re.match(";TYPE:(.*)", line).group(1)
 
-            elif ";MESH:" in movement:
-                mesh = re.match(";MESH:(.*)", movement).group(1)
+            elif ";MESH:" in line:
+                mesh = re.match(";MESH:(.*)", line).group(1)
         
-        elif ";LAYER_COUNT:" in movement:
+        elif ";LAYER_COUNT:" in line:
             start = True
 
     return data
