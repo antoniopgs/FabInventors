@@ -44,7 +44,10 @@ def slice_json(json, slices = 3):
                 if left_bound <= sx1 <= right_bound and left_bound <= sx2 <= right_bound:
                     subline = {"points": [(sx1,sy1, line["points"][0][2]),
                                           (sx2,sy2, line["points"][1][2])],
-                               "type": line["type"]}
+                               "speed": line["speed"], # Not sure if this is correct
+                               "extrusion": line["extrusion"], # Not sure if this is correct
+                               "type": line["type"],
+                               "mesh": line["mesh"]} # Not sure if this is correct
                     output[f"slice-{n+1}"]["lines"].append(subline)
 
     return output

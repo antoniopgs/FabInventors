@@ -24,12 +24,10 @@ def visualize(data):
     
     for line in data["lines"]:
 
-        ax.plot(
-            [line["points"][0][0], line["points"][1][0]],
-            [line["points"][0][1], line["points"][1][1]],
-            [line["points"][0][2], line["points"][1][2]],
-            color=colors[line["type"]]
-        )
+        ax.plot([line["points"][0][0], line["points"][1][0]],
+                [line["points"][0][1], line["points"][1][1]],
+                [line["points"][0][2], line["points"][1][2]],
+                color=colors[line["type"]])
 
     ax.legend(colors.keys(), labelcolor=colors.values())
     
