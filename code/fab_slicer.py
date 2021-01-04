@@ -47,13 +47,19 @@ def slice_json(json, slices = 3):
                 left_bound = min_x + n*slice_width
                 right_bound = min_x + (n+1)*slice_width
 
+                if line_str.length == 0:
+                    subline_extrusion = line["extrusion"]
+                else:
+                    subline_extrusion = line["extrusion"] / (line_str.length / subline.length)
+
                 if left_bound <= sx1 <= right_bound and left_bound <= sx2 <= right_bound:
-                    subline = {"points": [(sx1,sy1, line["points"][0][2]),
+                    json_line = {"points": [(sx1,sy1, line["points"][0][2]),
                                           (sx2,sy2, line["points"][1][2])],
-                               "speed": line["speed"],
-                               "extrusion": line["extrusion"] / (line_str.length / subline.length),
-                               "type": line["type"],
-                               "mesh": line["mesh"]}
-                    output[f"slice-{n+1}"]["lines"].append(subline)
+                                 "speed": line["speed"],
+                                 "extrusion": subline_extrusion,
+                                 "type": line["type"],
+                                 "mesh": line["mesh"]}
+                    
+                    output[f"slice-{n+1}"]["lines"].append(json_line)
 
     return output

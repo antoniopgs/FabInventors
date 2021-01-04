@@ -20,7 +20,7 @@ def parse(file):
                 x = float(info.group(2).replace("X", "")) if info.group(2) else prev_x
                 y = float(info.group(3).replace("Y", "")) if info.group(3) else prev_y
                 z = float(info.group(4).replace("Z", "")) if info.group(4) else prev_z
-                extrusion = float(info.group(5).replace("E", "")) if info.group(5) else None # No apparent "previous extrusion" values. It's always explicit.
+                extrusion = float(info.group(5).replace("E", "")) if info.group(5) else float(0) # No apparent "previous extrusion" values. It's always explicit.
 
                 data["lines"].append({
                     "points": [
