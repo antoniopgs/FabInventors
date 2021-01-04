@@ -1,6 +1,9 @@
 from shapely.geometry import LineString, MultiLineString
 from shapely.ops import split
 
+def set_boundaries(boundaries):
+    pass
+
 def slice_json(json, slices = 3):
     output = {}
     
@@ -14,7 +17,8 @@ def slice_json(json, slices = 3):
     boundaries = []
 
     for i in range(1, slices):
-        boundary = LineString([(min_x + i*slice_width, min_y), (min_x + i*slice_width, max_y)])
+        boundary_x = min_x + i*slice_width
+        boundary = LineString([(boundary_x, min_y), (boundary_x, max_y)])
         boundaries.append(boundary)
 
     boundaries = MultiLineString(boundaries)
@@ -24,9 +28,11 @@ def slice_json(json, slices = 3):
         lx2, ly2 = line["points"][1][0], line["points"][1][1]
             
         line_str = LineString([(lx1,ly1), (lx2,ly2)])
+        
         sublines = split(line_str, boundaries)
 
         for subline in list(sublines.geoms):
+            
             subline_coords = list(subline.coords)
                 
             sx1 = subline_coords[0][0]
@@ -44,10 +50,10 @@ def slice_json(json, slices = 3):
                 if left_bound <= sx1 <= right_bound and left_bound <= sx2 <= right_bound:
                     subline = {"points": [(sx1,sy1, line["points"][0][2]),
                                           (sx2,sy2, line["points"][1][2])],
-                               "speed": line["speed"], # Not sure if this is correct
-                               "extrusion": line["extrusion"], # Not sure if this is correct
+                               "speed": line["speed"],
+                               "extrusion": line["extrusion"] / (line_str.length / subline.length),
                                "type": line["type"],
-                               "mesh": line["mesh"]} # Not sure if this is correct
+                               "mesh": line["mesh"]}
                     output[f"slice-{n+1}"]["lines"].append(subline)
 
     return output
