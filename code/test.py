@@ -9,9 +9,9 @@ gcode_file = samples_folder + "2_pecas.gcode"
 
 json_data = parse(gcode_file)
 
-slices = slice_json(json_data, rows=2, columns=3)
+slices = slice_json(json_data, rows=2, columns=1)
 
-chosen_slice = slices["slice-3"]
+chosen_slice = slices["slice-1"]
 gcodify(chosen_slice)
 
 slice_file = chosen_slice["input"]

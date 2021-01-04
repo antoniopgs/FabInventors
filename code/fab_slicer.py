@@ -1,8 +1,6 @@
 from shapely.geometry import LineString, Polygon, MultiPolygon
 
-def slice_json(json_data, rows = 2, columns = 3):
-    output = {}
-
+def set_boundaries(json_data, rows, columns):
     min_x = min(line["points"][1][0] for line in json_data["lines"])
     max_x = max(line["points"][1][0] for line in json_data["lines"])
         
@@ -11,8 +9,8 @@ def slice_json(json_data, rows = 2, columns = 3):
 
     slice_width = (max_x - min_x) / columns
     slice_depth = (max_y - min_y) / rows
-
-    boundary_polygons = []
+    
+    polygons = []
 
     for r in range(0, rows):
         for c in range(0, columns):
@@ -21,11 +19,14 @@ def slice_json(json_data, rows = 2, columns = 3):
             top_right = (min_x + (c+1)*slice_width, min_y + (r+1)*slice_depth)
             top_left = (min_x + c*slice_width, min_y + (r+1)*slice_depth)
             
-            temp_slice = Polygon([bottom_left, bottom_right, top_right, top_left])
-            boundary_polygons.append(temp_slice)
+            polygon = Polygon([bottom_left, bottom_right, top_right, top_left])
+            polygons.append(polygon)
 
-    boundary_polygons = MultiPolygon(boundary_polygons)
+    return MultiPolygon(polygons)
 
+
+def slice_json(json_data, rows = 2, columns = 3):
+    output = {}
     for line in json_data["lines"]:
 
         lx1, ly1 = line["points"][0][0], line["points"][0][1]
@@ -33,7 +34,9 @@ def slice_json(json_data, rows = 2, columns = 3):
             
         line_str = LineString([(lx1,ly1), (lx2,ly2)])
 
-        for i, boundary_slice in enumerate(boundary_polygons):
+        boundaries = set_boundaries(json_data, rows, columns)
+
+        for i, boundary_slice in enumerate(boundaries):
             output.setdefault(f"slice-{i+1}", {"input": f"Slice {i+1} of {json_data['input']}", "lines": []})
             sub_line_str = line_str.intersection(boundary_slice)
             
@@ -51,13 +54,13 @@ def slice_json(json_data, rows = 2, columns = 3):
                 else:
                     sub_line_str_extrusion = line["extrusion"] / (line_str.length / sub_line_str.length)
 
-                json_line = {"points": [(sx1,sy1, line["points"][0][2]),
+                output_line = {"points": [(sx1,sy1, line["points"][0][2]),
                                         (sx2,sy2, line["points"][1][2])],
                              "speed": line["speed"],
                              "extrusion": sub_line_str_extrusion,
                              "type": line["type"],
                              "mesh": line["mesh"]}
 
-                output[f"slice-{i+1}"]["lines"].append(json_line)
+                output[f"slice-{i+1}"]["lines"].append(output_line)
 
     return output
