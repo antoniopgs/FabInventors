@@ -5,17 +5,18 @@ from fab_slicer import slice_json
 from fab_parser import parse
 
 samples_folder = "./../gcode_samples/"
-gcode_file = samples_folder + "2_pecas.gcode"
+gcode_file = samples_folder + "1_peca.gcode"
 
-json_data = parse(gcode_file)
+file_json = parse(gcode_file)
 
-slices = slice_json(json_data, rows=2, columns=1)
+slices = slice_json(file_json, rows=2, columns=1)
 
-chosen_slice = slices["slice-1"]
-gcodify(chosen_slice)
+chosen_slice = slices["slice-2"]
 
-slice_file = chosen_slice["input"]
-slice_data = parse(slice_file)
+slice_gcode = gcodify(chosen_slice)
 
-slice_fig = visualize(slice_data)
+slice_json = parse(f"./new-gcodes/{chosen_slice['input']}")
+
+slice_fig = visualize(slice_json)
 slice_fig.show()
+

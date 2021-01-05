@@ -1,12 +1,17 @@
-def gcodify(json):
-    with open(f"{json['input']}", "a") as output:
+import os
 
+def gcodify(json_data):
+    if not os.path.exists("./new-gcodes"):
+        os.makedirs("./new-gcodes")
+
+    with open(f"./new-gcodes/{json_data['input']}", "w") as output: # Mode is 'w' to overwrite file if it already exists.
+        
         output.write(";LAYER_COUNT:\n") # Parser needs this line to start.
 
         previous_line_type = None
         previous_mesh = None
         
-        for line in json["lines"]:
+        for line in json_data["lines"]:
 
             points = line["points"][1]
             x, y, z = points[0], points[1], points[2]
@@ -32,6 +37,8 @@ def gcodify(json):
             output.write(f"{gcode_line}\n")
 
             previous_mesh, previous_line_type = mesh, line_type
+
+    return output
             
             
             
