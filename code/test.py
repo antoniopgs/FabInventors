@@ -9,14 +9,14 @@ gcode_file = samples_folder + "1_peca.gcode"
 
 file_json = parse(gcode_file)
 
-slices = slice_json(file_json, rows=2, columns=1)
+main_fig = visualize(file_json)
+main_fig.show()
 
-chosen_slice = slices["slice-2"]
+slices = slice_json(file_json, rows=1, columns=3)
 
-slice_gcode = gcodify(chosen_slice)
+chosen_slice = slices["slice-1"]
 
-slice_json = parse(f"./new-gcodes/{chosen_slice['input']}")
-
-slice_fig = visualize(slice_json)
+slice_fig = visualize(chosen_slice)
 slice_fig.show()
 
+slice_gcode = gcodify(chosen_slice)
