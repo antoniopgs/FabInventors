@@ -12,9 +12,9 @@ file_json = parse(gcode_file)
 main_fig = visualize(file_json)
 main_fig.show()
 
-slices = slice_json(file_json, rows=1, columns=3)
+slices = slice_json(file_json, rows=2, columns=3)
 
-chosen_slice = slices["slice-1"]
+chosen_slice = slices["slice-3"]
 
 slice_fig = visualize(chosen_slice)
 slice_fig.show()
