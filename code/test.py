@@ -1,5 +1,4 @@
 from fab_visualizer import visualize
-#from fab_estimator import estimate
 #from fab_gcodifier import gcodify
 from fab_slicer import slice_json
 from fab_parser import parse

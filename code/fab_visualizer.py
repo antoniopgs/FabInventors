@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from fab_timer import timer
 
 # COLOR NAMES: https://matplotlib.org/3.1.0/gallery/color/named_colors.html
 colors = {
@@ -13,7 +12,6 @@ colors = {
     "FILL": "gold"
 }
 
-@timer
 def visualize(data):
     fig = plt.figure()
     ax = fig.gca(projection="3d")

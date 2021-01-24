@@ -1,7 +1,5 @@
-from fab_timer import timer
 import re, os
 
-@timer
 def parse(file):
     start = False
     data = {"input": os.path.basename(file), "lines": []}
