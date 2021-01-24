@@ -29,16 +29,18 @@ def slice_json(json_data, rows, columns):
                 lx1, ly1 = line["points"][0][0], line["points"][0][1]
                 lx2, ly2 = line["points"][1][0], line["points"][1][1]
 
-                sub_line = LineString([(lx1,ly1), (lx2,ly2)]).intersection(slice_boundary)
+                linestr = LineString([(lx1,ly1), (lx2,ly2)])
 
-                if not sub_line.is_empty:
-                    sub_line_str_coords = list(sub_line.coords)
+                sublinestr = linestr.intersection(slice_boundary)
 
-                    sx1 = sub_line_str_coords[0][0]
-                    sy1 = sub_line_str_coords[0][1]
+                if not sublinestr.is_empty:
+                    sublinestr_coords = list(sublinestr.coords)
+
+                    sx1 = sublinestr_coords[0][0]
+                    sy1 = sublinestr_coords[0][1]
                         
-                    sx2 = sub_line_str_coords[1][0]
-                    sy2 = sub_line_str_coords[1][1]
+                    sx2 = sublinestr_coords[1][0]
+                    sy2 = sublinestr_coords[1][1]
 
                     # TRAVEL LINE STITCHER
                     travel = True if line["type"] == "TRAVEL" else False
@@ -56,21 +58,21 @@ def slice_json(json_data, rows, columns):
                                                 (travel_sx2,travel_sy2, line["points"][1][2])],
                                     "speed": line["speed"], # Not sure about speed here.
                                     "extrusion": float(0),
-                                    "type": line["type"],
+                                    "type": "TRAVEL",
                                     "mesh": line["mesh"]}
                         output[f"slice-{slice_number}"]["lines"].append(travel_line)
                         previous_travel = travel # Save Previous Travel value.
 
                     # DIVIDE TOTAL LINE EXTRUSION PER SUB-LINES IF NEEDED:
-                    if line_str.length == 0:
-                        sub_line_str_extrusion = line["extrusion"]
+                    if sublinestr.length == 0:
+                        sublinestr_extrusion = line["extrusion"]
                     else:
-                        sub_line_str_extrusion = line["extrusion"] / (line_str.length / sub_line.length)
+                        sublinestr_extrusion = line["extrusion"] / (linestr.length / sublinestr.length)
 
                     output_line = {"points": [(sx1,sy1, line["points"][0][2]),
                                             (sx2,sy2, line["points"][1][2])],
                                 "speed": line["speed"],
-                                "extrusion": sub_line_str_extrusion,
+                                "extrusion": sublinestr_extrusion,
                                 "type": line["type"],
                                 "mesh": line["mesh"]}
 
