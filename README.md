@@ -31,6 +31,34 @@ And in order to calculate intersections, one needs lines. But G-Code instruction
 
 (higher quality version here: [Flowchart.pdf](https://github.com/antoniopgs/FabInventors/files/6854870/Flowchart.pdf))
 
+### Desired JSON Format
+The G-Code files should be parsed into a JSON with the following format:
+```
+data = {
+    "input": "xyz.gcode",
+    "lines": [
+        {"points": [(0, 0, "z2"), ("x2", "y2", "z2")], # Milimeters
+        "speed": "F", # Milimeters per Minute
+        "extrusion": "E", # Milimeters
+        "type": "TRAVEL(if 'G0' in line_content) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT / SKIRT",
+        "mesh": "MESH_NAME/NONMESH"
+        },
+        {"points": [("x1", "y1", "z1"), ("x2", "y2", "z2")], # Milimeters
+        "speed": "F", # Milimeters per Minute
+        "extrusion": "E", # Milimeters
+        "type": "TRAVEL(if 'G0' in line_content) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT / SKIRT",
+        "mesh": "MESH_NAME/NONMESH"
+        },
+        {"points": [("x1", "y1", "z1"), ("x2", "y2", "z2")], # Milimeters
+        "speed": "F", # Milimeters per Minute
+        "extrusion": "E", # Milimeters
+        "type": "TRAVEL(if 'G0' in line_content) / WALL-OUTER / WALL-INNER / SKIN / FILL / SUPPORT / SKIRT",
+        "mesh": "MESH_NAME/NONMESH"
+        },
+    ]
+}
+```
+
 ### Extras
 **The software will also feature:**
 - A series of estimators for print-time duration, energy consumption and material expenditure. _(IN PROGRESS)_
