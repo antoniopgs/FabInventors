@@ -39,5 +39,8 @@ And in order to calculate intersections, one needs lines. But G-Code instruction
 - A series of estimators for print-time duration, energy consumption and material expenditure. _(IN PROGRESS)_
 - Multi-Threading, to increase processing speed. _(IN PROGRESS)_
 
-The 3D Visualizer can be seen here:
+**The 3D Visualizer can be seen here:**
+
+![image](https://user-images.githubusercontent.com/44982443/126475410-b73347ac-e330-43b9-82eb-c4a2236c35f5.png)
+
 
