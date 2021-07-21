@@ -18,21 +18,21 @@ However, in order to slice G-Code instructions, one needs to calculate intersect
 And in order to calculate intersections, one needs lines. But G-Code instructions consist of a series of points.
 
 ## Goal
-Therefore, this software intends to:
+**Therefore, this software intends to:**
 1. Receive a G-Code input
 2. Parse it from a series of points, to a series of lines
 3. Slice said series of lines (with a dynamic number of rows and columns, to accommodate any table distribution of print-heads) into multiple files.
 4. Convert each slice file back into a the G-Code format
 5. Feed the G-Code file of each slice into each head of the Multi-Head 3D Printer.
 
-This flow can be seen here:
-![image](https://user-images.githubusercontent.com/44982443/126473210-09949b1a-f742-40b5-9e13-9b0ca40d3c4e.png)
+**This flow can also be seen here:** [Flowchart.pdf](https://github.com/antoniopgs/FabInventors/files/6854870/Flowchart.pdf)
+
 
 ### Extras
-The software will also feature:
+**The software will also feature:**
 - A fully-adjustable 3D Visualizer, complete with color features and able to project both complete parts and slices.
-- A series of estimators for print-time duration, energy consumption and material expenditure. **(IN PROGRESS)**
-- Multi-Threading, to increase processing speed. **(IN PROGRESS)**
+- A series of estimators for print-time duration, energy consumption and material expenditure. _(IN PROGRESS)_
+- Multi-Threading, to increase processing speed. _(IN PROGRESS)_
 
 The 3D Visualizer can be seen here:
 
