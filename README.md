@@ -31,16 +31,23 @@ And in order to calculate intersections, one needs lines. But G-Code instruction
 
 (higher quality version here: [Flowchart.pdf](https://github.com/antoniopgs/FabInventors/files/6854870/Flowchart.pdf))
 
-
-
 ### Extras
 **The software will also feature:**
-- A fully-adjustable 3D Visualizer, complete with color features and able to project both complete parts and slices.
 - A series of estimators for print-time duration, energy consumption and material expenditure. _(IN PROGRESS)_
-- Multi-Threading, to increase processing speed. _(IN PROGRESS)_
+- A fully-adjustable 3D Visualizer, complete with color features and able to project both complete parts and slices.
 
+#### Estimator Physics
+**The estimators will perform calculations on several physical factors like:**
+- motor strength
+- material weight
+- print head acceleration
+- etc
+
+#### Visualizer
 **The 3D Visualizer can be seen here:**
 
 ![image](https://user-images.githubusercontent.com/44982443/126475410-b73347ac-e330-43b9-82eb-c4a2236c35f5.png)
 
-
+#### Potential Improvements
+- Implement tests, to see if all final products match the Original G-Code products.
+- Once all tests are passed, implement some CI (maybe with GitHub Actions) to automatically run all tests whenever new code is pushed to master, to ensure quality and guarantee that no new code compromises product integrity.
