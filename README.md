@@ -25,7 +25,12 @@ And in order to calculate intersections, one needs lines. But G-Code instruction
 4. Convert each slice file back into a the G-Code format
 5. Feed the G-Code file of each slice into each head of the Multi-Head 3D Printer.
 
-**This flow can also be seen here:** [Flowchart.pdf](https://github.com/antoniopgs/FabInventors/files/6854870/Flowchart.pdf)
+**This flow can also be seen here:**
+
+![Flowchart](https://user-images.githubusercontent.com/44982443/126475040-a6300796-e47e-4e2e-ba59-951f878dd00e.png)
+
+(higher quality version here: [Flowchart.pdf](https://github.com/antoniopgs/FabInventors/files/6854870/Flowchart.pdf))
+
 
 
 ### Extras
