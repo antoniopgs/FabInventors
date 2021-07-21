@@ -6,7 +6,21 @@ Software to facilitate multi-head 3D Printer control, provide print time duratio
 
 These instructions are usually provided in a file format called G-Code.
 
+A G-Code file is basically a series of points (along with speed, extrusion and some other properties)
+
 A sample of G-Code can be seen here:
+
+![image](https://user-images.githubusercontent.com/44982443/126477537-bc3d478d-57d9-4aa1-b248-3eb14c4c55a9.png)
+
+**Description:**
+- G1 = Line with material extrusion
+- G0 = Line without material extrusion (travel line)
+- F = Print Head Speed
+- X = X coordinate
+- Y = Y coordinate
+- Z = Z coordinate (not shown here - 3D parts are printed layer by layer, so z changes happen with less frequency)
+- E = Amount of material extruded
+
 
 ## Problem to Solve
 To reduce the manufacturing time, FabInventors is developing a Multi-Head 3D Printer.
